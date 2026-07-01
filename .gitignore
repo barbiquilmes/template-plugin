@@ -1,0 +1,7 @@
+sample.csv
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+dist/
+.DS_Store

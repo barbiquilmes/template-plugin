@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "csv-tools": {
+      "command": "${CLAUDE_PLUGIN_DATA}/venv/bin/python",
+      "args": ["${CLAUDE_PLUGIN_ROOT}/src/server.py"]
+    }
+  }
+}
