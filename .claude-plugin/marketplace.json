@@ -1,0 +1,13 @@
+{
+  "name": "template-plugin",
+  "owner": {
+    "name": "barbiquilmes"
+  },
+  "plugins": [
+    {
+      "name": "csv-demo",
+      "source": ".",
+      "description": "MCP tool to describe CSV files with case_id and usd_amount columns"
+    }
+  ]
+}
