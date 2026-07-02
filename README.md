@@ -1,6 +1,9 @@
-# csv-demo plugin
+# template-plugin marketplace
 
-A minimal Claude Code plugin that bundles a Python MCP server with one tool: `describe_csv_file`.
+A minimal Claude Code plugin marketplace distributing two plugins, each bundling a Python MCP server:
+
+- **csv-demo** — one tool, `describe_csv_file`: statistical summary of a CSV file (documented below)
+- **txt-demo** — one tool, `describe_text_file`: line/word/char counts; demonstrates importing shared code (`shared/operations.py`) via a symlink that gets dereferenced on install
 
 ## What it does
 
@@ -37,6 +40,7 @@ Exposes a single MCP tool that reads a CSV file with `case_id` and `usd_amount` 
 ```shell
 /plugin marketplace add barbiquilmes/template-plugin
 /plugin install csv-demo@template-plugin
+/plugin install txt-demo@template-plugin
 ```
 
 Then run `/reload-plugins` and the MCP server will connect. No restart needed.
@@ -51,11 +55,15 @@ Describe my CSV file at /path/to/your/file.csv
 
 Claude will call the MCP tool automatically.
 
+## How Claude Code manages plugin files
+
+See [PLUGIN-FILES.md](PLUGIN-FILES.md) for the full lifecycle: what each `/plugin` command creates on disk, how `CLAUDE_PLUGIN_ROOT` / `CLAUDE_PLUGIN_DATA` behave, and what happens on update and uninstall.
+
 ## Local development
 
 ```bash
-# Load without installing
-claude --plugin-dir ./template-plugin
+# Load one plugin without installing (point at the plugin dir, not the marketplace root)
+claude --plugin-dir ./plugins/csv-demo
 
 # Reload after changing .mcp.json or hooks (SKILL.md changes are live instantly)
 /reload-plugins
@@ -66,21 +74,27 @@ claude --plugin-dir ./template-plugin
 Tests call `describe_csv_file` directly as a plain Python function — no plugin loaded, no MCP server running. The `conftest.py` stubs out the `mcp` package so importing `server.py` works without the plugin venv.
 
 ```bash
-python3 -m pytest tests/ -v
+cd plugins/csv-demo && python3 -m pytest tests/ -v
 ```
 
 ## Project structure
 
 ```
-template-plugin/
+template-plugin/              # marketplace root — not itself a plugin
 ├── .claude-plugin/
-│   └── plugin.json       # Plugin manifest (name: csv-demo)
-├── src/
-│   └── server.py         # FastMCP server — defines describe_csv_file
-├── hooks/
-│   └── hooks.json        # No active hooks (uv run handles deps automatically)
-├── tests/
-│   ├── conftest.py       # Stubs mcp so tests run without the plugin venv
-│   └── test_server.py    # pytest tests for describe_csv_file
-└── .mcp.json             # Declares csv-tools stdio server
+│   └── marketplace.json      # Catalog: lists csv-demo and txt-demo
+├── shared/
+│   └── operations.py         # Shared code, reachable from plugins only via symlinks
+└── plugins/
+    ├── csv-demo/
+    │   ├── .claude-plugin/plugin.json
+    │   ├── .mcp.json         # Declares csv-tools stdio server
+    │   ├── src/server.py     # FastMCP server — describe_csv_file
+    │   ├── hooks/hooks.json  # No active hooks (uv run handles deps automatically)
+    │   └── tests/            # conftest.py stubs mcp; pytest tests for describe_csv_file
+    └── txt-demo/
+        ├── .claude-plugin/plugin.json
+        ├── .mcp.json         # Declares txt-tools stdio server
+        ├── src/server.py     # FastMCP server — describe_text_file
+        └── shared → ../../shared  # Symlink; dereferenced (content copied) on install
 ```

@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "txt-tools": {
+      "command": "uv",
+      "args": ["run", "--project", "${CLAUDE_PLUGIN_ROOT}", "python", "${CLAUDE_PLUGIN_ROOT}/src/server.py"]
+    }
+  }
+}

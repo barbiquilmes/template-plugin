@@ -9,31 +9,42 @@ Docs: [MCP](https://code.claude.com/docs/en/mcp) · [Plugins](https://code.claud
  
 ## Project structure
  
+This repo is a **marketplace** distributing several plugins. Each plugin is a self-contained
+directory under `plugins/`; the marketplace root holds only the catalog and shared code.
+
 ```
-template-plugin/
+template-plugin/                  # marketplace root
 ├── .claude-plugin/
-│   └── plugin.json          # Plugin manifest (name, version, description)
-├── skills/
-│   └── my-skill/
-│       ├── SKILL.md         # Skill instructions + frontmatter
-│       └── scripts/
-│           └── run.py       # Script invoked by the skill
-├── agents/
-│   └── my-agent.md          # Subagent definition
-├── hooks/
-│   └── hooks.json           # Setup hook to bootstrap the Python venv
-├── monitors/
-│   └── monitors.json        # Background monitors (optional)
-├── bin/                     # Executables added to PATH while plugin is enabled
-├── settings.json            # Default settings applied when plugin is enabled
-├── src/                     # MCP server source code (name is yours to choose)
-│   └── server.py
-├── .mcp.json                # Declares the MCP server; points to src/server.py
-└── .lsp.json                # LSP server config (optional)
+│   └── marketplace.json         # Marketplace catalog: lists the plugins below
+├── shared/                      # Code shared across plugins — reachable only via symlinks
+│   └── operations.py
+└── plugins/
+    └── <plugin-name>/           # everything below is one self-contained plugin
+        ├── .claude-plugin/
+        │   └── plugin.json      # Plugin manifest (name, version, description)
+        ├── skills/
+        │   └── my-skill/
+        │       ├── SKILL.md     # Skill instructions + frontmatter
+        │       └── scripts/
+        │           └── run.py   # Script invoked by the skill
+        ├── agents/
+        │   └── my-agent.md      # Subagent definition
+        ├── hooks/
+        │   └── hooks.json       # Event handlers (optional)
+        ├── monitors/
+        │   └── monitors.json    # Background monitors (optional)
+        ├── bin/                 # Executables added to PATH while plugin is enabled
+        ├── settings.json        # Default settings applied when plugin is enabled
+        ├── src/                 # MCP server source code (name is yours to choose)
+        │   └── server.py
+        ├── shared → ../../shared  # Optional symlink; dereferenced (copied) on install
+        ├── .mcp.json            # Declares the MCP server; points to src/server.py
+        └── .lsp.json            # LSP server config (optional)
 ```
  
-> ⚠️ Only `plugin.json` goes inside `.claude-plugin/`. Everything else lives at the plugin root.
-> Reference: [Plugin structure overview](https://code.claude.com/docs/en/plugins#plugin-structure-overview)
+> ⚠️ Only identity files go inside a `.claude-plugin/` directory: `marketplace.json` at the marketplace root, `plugin.json` at each plugin's root. Everything else lives at the respective plugin root.
+> A plugin cannot reference files outside its own directory (`../`) after installation — only the plugin directory is copied to the cache. Symlinks pointing elsewhere *within the same marketplace* are dereferenced on install; that is how `shared/` is distributed.
+> Reference: [Plugin structure overview](https://code.claude.com/docs/en/plugins#plugin-structure-overview) · [PLUGIN-FILES.md](PLUGIN-FILES.md)
  
 ---
  
@@ -123,8 +134,8 @@ Reference: [MCP tool naming](https://code.claude.com/docs/en/plugins-reference#m
 ## Testing locally
  
 ```bash
-# Load without installing
-claude --plugin-dir ./template-plugin
+# Load one plugin without installing (point at the plugin dir, not the marketplace root)
+claude --plugin-dir ./plugins/csv-demo
  
 # Reload after changing hooks / .mcp.json / agents (SKILL.md changes are live instantly)
 /reload-plugins

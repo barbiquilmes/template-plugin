@@ -1,13 +1,19 @@
 {
   "name": "template-plugin",
+  "description": "Teaching marketplace: minimal Claude Code plugins bundling Python MCP servers",
   "owner": {
     "name": "barbiquilmes"
   },
   "plugins": [
     {
       "name": "csv-demo",
-      "source": ".",
+      "source": "./plugins/csv-demo",
       "description": "MCP tool to describe CSV files with case_id and usd_amount columns"
+    },
+    {
+      "name": "txt-demo",
+      "source": "./plugins/txt-demo",
+      "description": "MCP tool to describe text files — demonstrates sharing code from the marketplace root via a symlink"
     }
   ]
 }

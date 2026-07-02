@@ -1,0 +1,8 @@
+{
+  "name": "txt-demo",
+  "version": "0.1.0",
+  "description": "MCP tool to describe text files — demonstrates sharing code from the marketplace root via a symlink",
+  "author": {
+    "name": "barbiquilmes"
+  }
+}
