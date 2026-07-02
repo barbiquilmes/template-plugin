@@ -1,6 +1,6 @@
 [project]
 name = "csv-demo"
-version = "0.1.0"
+version = "0.1.1"
 description = "MCP server for csv-demo plugin"
 requires-python = ">=3.10"
 dependencies = ["mcp==1.9.0"]

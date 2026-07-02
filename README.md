@@ -28,7 +28,8 @@ Exposes a single MCP tool that reads a CSV file with `case_id` and `usd_amount` 
     "total": 350.75,
     "min": 50.25,
     "max": 200.50,
-    "mean": 116.92
+    "mean": 116.92,
+    "median": 100.00
   }
 }
 ```

@@ -12,7 +12,7 @@ def describe_csv_file(path: str) -> dict:
     """Describe a CSV file with case_id and usd_amount columns.
 
     Returns row count, list of case_ids, and usd_amount statistics
-    (total, min, max, mean).
+    (total, min, max, mean, median).
     """
     if not os.path.exists(path):
         return {"error": f"File not found: {path}"}
@@ -43,6 +43,7 @@ def describe_csv_file(path: str) -> dict:
             "min": round(min(amounts), 2),
             "max": round(max(amounts), 2),
             "mean": round(statistics.mean(amounts), 2),
+            "median": round(statistics.median(amounts), 2),
         },
     }
 

@@ -44,6 +44,7 @@ def test_usd_statistics(tmp_path):
     assert stats["min"] == 50.25
     assert stats["max"] == 200.50
     assert stats["mean"] == 116.92  # round(350.75 / 3, 2)
+    assert stats["median"] == 100.00
 
 
 def test_extra_columns_are_reported(tmp_path):
