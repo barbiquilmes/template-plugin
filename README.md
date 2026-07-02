@@ -39,15 +39,9 @@ Exposes a single MCP tool that reads a CSV file with `case_id` and `usd_amount` 
 /plugin install csv-demo@template-plugin
 ```
 
-Then **restart Claude Code** — do not just run `/reload-plugins`. The venv is created by a `SessionStart` hook, which only fires when a session begins. If you install mid-session, the hook has already fired and the venv won't exist until you restart.
+Then run `/reload-plugins` and the MCP server will connect. No restart needed.
 
-After restarting, verify the MCP server connected:
-
-```shell
-/mcp
-```
-
-**Requirements:** Python 3.8+, [`uv`](https://docs.astral.sh/uv/) must be on your PATH.
+**Requirements:** [`uv`](https://docs.astral.sh/uv/) must be on your PATH. Dependencies are resolved automatically by `uv run` on first use.
 
 ## Usage
 
@@ -84,7 +78,7 @@ template-plugin/
 ├── src/
 │   └── server.py         # FastMCP server — defines describe_csv_file
 ├── hooks/
-│   └── hooks.json        # SessionStart hook: creates venv + installs dependencies
+│   └── hooks.json        # No active hooks (uv run handles deps automatically)
 ├── tests/
 │   ├── conftest.py       # Stubs mcp so tests run without the plugin venv
 │   └── test_server.py    # pytest tests for describe_csv_file
