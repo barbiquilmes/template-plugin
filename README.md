@@ -32,18 +32,36 @@ Exposes a single MCP tool that reads a CSV file with `case_id` and `usd_amount` 
 
 **Output (error):** `{ "error": "<reason>" }` — file not found, empty file, missing columns, or non-numeric `usd_amount`.
 
-## Setup
+## Installation
 
-**Requirements:** Python 3.8+, [`uv`](https://docs.astral.sh/uv/)
+```shell
+/plugin marketplace add barbiquilmes/template-plugin
+/plugin install csv-demo@template-plugin
+```
 
-Dependencies are declared in `pyproject.toml` (Poetry format). The Setup hook uses `uv` to create a venv in `$CLAUDE_PLUGIN_DATA` and install `mcp==1.9.0` on first load — no manual installation needed.
+Then **restart Claude Code** — do not just run `/reload-plugins`. The venv is created by a `SessionStart` hook, which only fires when a session begins. If you install mid-session, the hook has already fired and the venv won't exist until you restart.
+
+After restarting, verify the MCP server connected:
+
+```shell
+/mcp
+```
+
+**Requirements:** Python 3.8+, [`uv`](https://docs.astral.sh/uv/) must be on your PATH.
+
+## Usage
+
+```
+Describe my CSV file at /path/to/your/file.csv
+```
+
+Claude will call the MCP tool automatically.
+
+## Local development
 
 ```bash
-# Load plugin without installing
+# Load without installing
 claude --plugin-dir ./template-plugin
-
-# Verify the MCP server connected
-/mcp
 
 # Reload after changing .mcp.json or hooks (SKILL.md changes are live instantly)
 /reload-plugins
@@ -66,7 +84,7 @@ template-plugin/
 ├── src/
 │   └── server.py         # FastMCP server — defines describe_csv_file
 ├── hooks/
-│   └── hooks.json        # Setup hook: creates venv + installs mcp
+│   └── hooks.json        # SessionStart hook: creates venv + installs dependencies
 ├── tests/
 │   ├── conftest.py       # Stubs mcp so tests run without the plugin venv
 │   └── test_server.py    # pytest tests for describe_csv_file
