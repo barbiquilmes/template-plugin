@@ -1,0 +1,8 @@
+{
+  "name": "txt-skill-demo",
+  "version": "0.1.0",
+  "description": "Skill-based counterpart of txt-demo: describes text files via a script Claude runs, no MCP server involved",
+  "author": {
+    "name": "barbiquilmes"
+  }
+}

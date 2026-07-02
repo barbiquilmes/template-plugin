@@ -14,6 +14,11 @@
       "name": "txt-demo",
       "source": "./plugins/txt-demo",
       "description": "MCP tool to describe text files — demonstrates sharing code from the marketplace root via a symlink"
+    },
+    {
+      "name": "txt-skill-demo",
+      "source": "./plugins/txt-skill-demo",
+      "description": "Skill that describes text files via a bundled script — the skill-based counterpart of txt-demo's MCP tool"
     }
   ]
 }
